@@ -6,7 +6,7 @@ import { UserEntity } from '../entities/user.entity';
 
 @Injectable()
 export class UsersRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.prisma.user.create({
@@ -15,7 +15,16 @@ export class UsersRepository {
   }
 
   async findAll(): Promise<UserEntity[]> {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: {
+        posts: {
+          select: {
+            title: true,
+            createtAt: true,
+          }
+        }
+      }
+    });
   }
 
   async findOne(id: number): Promise<UserEntity> {
@@ -23,6 +32,14 @@ export class UsersRepository {
       where: {
         id,
       },
+      include: {
+        posts: {
+          select: {
+            title: true,
+            createtAt: true,
+          }
+        }
+      }
     });
   }
 
