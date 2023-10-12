@@ -1,0 +1,104 @@
+
+commandos cli
+nest --help
+
+
+
+--roda em modo dev e se tiver o --watch ligado vai sempre atualizar ao salvar.
+npm run start:dev
+
+///
+--Instalar pacote para o validation pipe, validar dados.
+npm i class-validator class-transformer
+
+-- Instalar pacote de transformação do nest.
+npm i @nestjs/mapped-types
+
+
+--Onde é configurado.
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,  //Garante que todas as informações indesejadas ou não mapeadas, serão removidos da requisição.
+      forbidNonWhitelisted: true, //Faz com que se houver um atributo no json não mapeado irá retornar um 400, não permitido.
+      transform: true, //Transforma os dados que chegam no recurso em um objeto tipado.
+    }),
+  );
+  await app.listen(3000);
+}
+
+bootstrap();
+///
+ 
+ 
+ ///
+ -- Instala o pacote TypeOrm para banco de dados(Postgres);
+npm i typeorm @nestjs/typeorm pg
+
+--Onde é configurado
+import { Module } from '@nestjs/common';
+import { CoursesModule } from './courses/courses.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+@Module({
+  imports: [
+    CoursesModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'docker',
+      database: 'postgres',
+      autoLoadEntities: true,  //Faz carregamento automático das entidades.
+      synchronize: true,  //Cria as tabelas automaticamente no banco de dados.
+    }),
+  ],
+})
+export class AppModule {}
+///
+
+
+
+///MIGRATIONS
+OLHAR A DOC DO NEST TOPICO MIGRATIONS
+
+CRIAR NOVA MIGRATION:
+
+npx typeorm migration:create src/migations/CreateCoursesTable
+
+deve sempre gerar um  novo buid:
+npm run build
+
+
+e depois executar o comando com run:
+npx typeorm migration:run -d dist/database/orm-cli-config.js
+
+caso precise rodar o revert, executar o comando acima porem trocando o run por revert.
+///
+
+
+///Adicionar o Configuration
+npm i @nestjs/config
+ --Adicionar o pacote para criar variáveis de ambiente...
+
+
+
+///Instalar o prisma (esta no docker)
+docker-compose exec app bash
+  -- dentro do container rodar npm install prisma -D
+  
+  -- rodar as migrations =  npx prisma migrate dev --name init
+  -- manter schema em node_modules atalizadao = prisma generate
+  -- adicionar o nest filters exception dentro do container = nest g filter common/filters/http-exception --no-spec
+  -- instalar o swagger 
+
+
+
+
+
+
+
+
+
