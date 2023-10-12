@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './repositories/users.repository';
-import { UnauthorizedError } from '../common/erros/types/UnauthorizedError';
-import { NotFoundError } from '../common/erros/types/NotFoundError';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly repository: UsersRepository) {}
+  constructor(private readonly repository: UsersRepository) {
+  }
 
   create(createUserDto: CreateUserDto) {
     return this.repository.create(createUserDto);
